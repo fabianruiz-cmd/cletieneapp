@@ -507,29 +507,34 @@
 <script>
 // ── Sesión ──────────────────────────────────────────────
 const urlParams = new URLSearchParams(window.location.search);
-const cedula = urlParams.get('cedula') || sessionStorage.getItem('cedula');
-const nombre = urlParams.get('nombre') || sessionStorage.getItem('nombre') || '';
+let cedula = urlParams.get('cedula') || sessionStorage.getItem('cedula') || '';
+let nombre = urlParams.get('nombre') || sessionStorage.getItem('nombre') || '';
+
+// Guardar en sessionStorage
+if (cedula) {
+  sessionStorage.setItem('cedula', cedula);
+  sessionStorage.setItem('nombre', nombre);
+  // Limpiar URL
+  window.history.replaceState({}, '', '/');
+}
 
 // Si no hay sesión, redirigir al login
 if (!cedula) { window.location.href = '/auth'; }
 
-// Guardar en sessionStorage por si recarga
-if (cedula) { sessionStorage.setItem('cedula', cedula); sessionStorage.setItem('nombre', nombre); }
-
-// Limpiar la URL para que no se vea la cédula
-if (urlParams.get('cedula')) { window.history.replaceState({}, '', '/'); }
-
-// Mostrar nombre en topbar
+// Al cargar la página
 window.addEventListener('DOMContentLoaded', function() {
+  // Mostrar nombre
   const el = document.getElementById('user-name-top');
-  if (el) el.textContent = nombre || cedula;
-  document.getElementById('f-search').value = cedula;
+  if (el) el.textContent = nombre || ('CC ' + cedula);
+  // Poner cédula en buscador y buscar
+  const searchInput = document.getElementById('f-search');
+  if (searchInput) searchInput.value = cedula;
+  console.log('[SESION] Cédula:', cedula);
   buscarServicios();
 });
 
 function cerrarSesion() {
-  sessionStorage.removeItem('cedula');
-  sessionStorage.removeItem('nombre');
+  sessionStorage.clear();
   window.location.href = '/auth';
 }
 // ────────────────────────────────────────────────────────
