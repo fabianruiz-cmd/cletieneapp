@@ -353,7 +353,7 @@ app.get('/api/health', function(req, res) {
   res.json({ status: 'ok', uptime: process.uptime(), env: ENV, prod_base: PROD.BASE, qa_base: QA.BASE });
 });
 
-app.listen(PORT, function() {
+app.listen(PORT, '0.0.0.0', function() {
   console.log('✅ CLTIENE WIP Dashboard en http://localhost:' + PORT);
   console.log('   Entorno activo: ' + ENV.toUpperCase());
   console.log('   PROD: ' + PROD.BASE + ' | QA: ' + QA.BASE);
